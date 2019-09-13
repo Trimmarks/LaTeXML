@@ -212,15 +212,15 @@ sub transformGraphic {
           NoteProgressDetailed(" [Reuse $cached @ " . ($width || '?') . " x " . ($height || '?') . "]");
           return ($cached, $width, $height); } } } }
   
-  # HACK: convert PDFs with dvisvgm
+  # HACK: convert PDFs with pdf2svg
   if ($srctype eq "pdf" && $type eq "svg") {
     $dest = $self->generateResourcePathname($doc, $node, $source, $type);
     my $absdest = $doc->checkDestination($dest);
-    my $dvicommand = "dvisvgm --stdout --pdf '$source' > '$absdest'";
-    my $dvierr     = system($dvicommand);
-    if ($dvierr != 0) {
-      Error('shell', 'dvisvgm', undef,
-        "Shell command '$dvicommand' (for dvi conversion) failed",
+    my $pdfcommand = "pdf2svg '$source' '$absdest'";
+    my $pdferr     = system($pdfcommand);
+    if ($pdferr != 0) {
+      Error('shell', 'pdf2svg', undef,
+        "Shell command '$pdfcommand' (for pdf conversion) failed",
         "Response was: $!");
       return; }
     return ($dest, undef, undef); }
